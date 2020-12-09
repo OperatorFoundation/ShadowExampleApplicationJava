@@ -1,0 +1,171 @@
+package org.operatorfoundation.shadowexampleapplicationjava;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.operatorfoundation.shapeshifter.shadow.java.ShadowConfig;
+import org.operatorfoundation.shapeshifter.shadow.java.ShadowSocket;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
+public class MainActivity extends AppCompatActivity {
+
+    String httpRequest = "GET / HTTP/1.0\r\n\r\n";
+    byte[] textBytes = httpRequest.getBytes();
+    byte[] buffer = new byte[1024];
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        View chachaButton = findViewById(R.id.ChaChaTest);
+        chachaButton.setOnClickListener(this::onClickChaCha);
+
+        View aesButton = findViewById(R.id.aesTest);
+        aesButton.setOnClickListener(this::onClickAES);
+
+    }
+
+    public void onClickChaCha(View v) {
+
+        TextView outcome = findViewById(R.id.outcome);
+        TextView output = findViewById(R.id.output);
+
+        outcome.setText("");
+        output.setText("");
+
+        new Thread(() -> {
+            try {
+                // Create the socket
+                ShadowConfig config = new ShadowConfig("1234", "CHACHA20-IETF-POLY1305");
+                ShadowSocket shadowSocket = new ShadowSocket(config, "159.203.158.90", 2345);
+
+                // Send a request to the server
+                shadowSocket.getOutputStream().write(textBytes);
+                shadowSocket.getOutputStream().flush();
+
+                // Read the data
+                int bytesRead = shadowSocket.getInputStream().read(buffer);
+                byte[] result = new byte[bytesRead];
+                System.arraycopy(buffer, 0, result, 0, bytesRead);
+                System.out.println(new String(result));
+
+                // Closes the socket
+                shadowSocket.close();
+
+                runOnUiThread(() -> {
+                    if (bytesRead == 0) {
+                        outcome.setText(R.string.Fail);
+                        output.setText(R.string.Empty_String);
+                    } else {
+                        outcome.setText(R.string.Success);
+                        output.setText(new String(result));
+                    }
+                });
+
+
+
+            } catch (IOException | NoSuchAlgorithmException e) {
+
+                runOnUiThread(() -> {
+                    outcome.setText(R.string.Fail);
+                    output.setText(e.toString());
+                });
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    public void onClickAES(View v) {
+
+        TextView outcome = findViewById(R.id.outcome);
+        TextView output = findViewById(R.id.output);
+
+        outcome.setText("");
+        output.setText("");
+
+        new Thread(() -> {
+            try {
+                // Create the socket
+                ShadowConfig config = new ShadowConfig("1234", "AES-128-GCM");
+                ShadowSocket shadowSocket = new ShadowSocket(config, "159.203.158.90", 2346);
+
+                // Send a request to the server
+                shadowSocket.getOutputStream().write(textBytes);
+                shadowSocket.getOutputStream().flush();
+
+                // Read the data
+                int bytesRead = shadowSocket.getInputStream().read(buffer);
+                byte[] result = new byte[bytesRead];
+                System.arraycopy(buffer, 0, result, 0, bytesRead);
+                System.out.println(new String(result));
+
+                // Closes the socket
+                shadowSocket.close();
+
+                runOnUiThread(() -> {
+                    if (bytesRead == 0) {
+                        outcome.setText(R.string.Fail);
+                        output.setText(R.string.Empty_String);
+                    } else {
+                        outcome.setText(R.string.Success);
+                        output.setText(new String(result));
+                    }
+                });
+
+
+
+            } catch (IOException | NoSuchAlgorithmException e) {
+
+                runOnUiThread(() -> {
+                    outcome.setText(R.string.Fail);
+                    output.setText(e.toString());
+                });
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+//    public static class MyNetwork extends Activity {
+//        private static final String TAG = "ShadowConnect";
+//        static ShadowConfig config;
+//        static ShadowSocket socket;
+//    }
+//
+//    public void ShadowConnect(Context applicationContext) throws IOException {
+//        try {
+//
+//            ShadowConfig config = new ShadowConfig("1234", "AES-128-GCM");
+//            ShadowSocket socket = new ShadowSocket(config, "1234", 2222);
+//            //**********************Operaotor************
+//            String plaintext = "GET / HTTP/1.0\r\n\r\n";
+//            byte[] textBytes = plaintext.getBytes();
+//            try {
+//                socket.getOutputStream().write(textBytes);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                socket.getOutputStream().flush();
+//                byte[] textOutput = new byte[2];
+//                System.out.println("Output.before read" + textOutput.toString());
+//                socket.getInputStream().read(textOutput);
+//                System.out.println("Output after read" + textOutput.toString());
+//
+//                socket.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+}
+

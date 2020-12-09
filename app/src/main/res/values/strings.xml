@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ShadowExampleApplicationJava</string>
+    <string name="ChaChaTest">ChaChaTest</string>
+    <string name="AESTest">AESTest</string>
+    <string name="output">Output</string>
+    <string name="Success">Success</string>
+    <string name="Fail">Fail</string>
+    <string name="Empty_String">Empty_String</string>
+</resources>
