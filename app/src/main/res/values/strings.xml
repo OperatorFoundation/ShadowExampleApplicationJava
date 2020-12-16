@@ -6,4 +6,7 @@
     <string name="Success">Success</string>
     <string name="Fail">Fail</string>
     <string name="Empty_String">Empty_String</string>
+    <string name="okhttpchacha">OkhttpChaCha</string>
+    <string name="okhttpaes">OkhttpAES</string>
+    <string name="outcome">Outcome</string>
 </resources>

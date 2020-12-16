@@ -10,59 +10,60 @@
         android:id="@+id/output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="67dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="244dp"
+        android:layout_marginTop="16dp"
         android:text="@string/output"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/outcome" />
 
     <Button
-        android:id="@+id/ChaChaTest"
+        android:id="@+id/chaChaTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="282dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="401dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/ChaChaTest"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/outcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="51dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="67dp"
-        android:text="Outcome"
-        app:layout_constraintBottom_toTopOf="@+id/output"
+        android:layout_marginTop="32dp"
+        android:text="@string/outcome"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ChaChaTest" />
+        app:layout_constraintTop_toBottomOf="@+id/okhttpChaCha" />
 
     <Button
         android:id="@+id/aesTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="185dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="49dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:text="@string/AESTest"
-        app:layout_constraintBottom_toTopOf="@+id/ChaChaTest"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/okhttpChaCha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/okhttpchacha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chaChaTest" />
+
+    <Button
+        android:id="@+id/okhttpAes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/okhttpaes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aesTest" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

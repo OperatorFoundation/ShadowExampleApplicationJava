@@ -12,6 +12,9 @@ import org.operatorfoundation.shapeshifter.shadow.java.ShadowSocket;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+//import okhttp3.OkHttpClient;
+//import okhttp3.Request;
+
 public class MainActivity extends AppCompatActivity {
 
     String httpRequest = "GET / HTTP/1.0\r\n\r\n";
@@ -23,13 +26,47 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View chachaButton = findViewById(R.id.ChaChaTest);
+        View chachaButton = findViewById(R.id.chaChaTest);
         chachaButton.setOnClickListener(this::onClickChaCha);
 
         View aesButton = findViewById(R.id.aesTest);
         aesButton.setOnClickListener(this::onClickAES);
 
     }
+
+    //    public void onClickOkHTTPAES(View v) {
+//        String host = "myshadowhost.org";
+//        int port = 8989;
+//
+//        ShadowConfig sConfig = new ShadowConfig("secret","password");
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
+//
+//        Request request = new Request.Builder().url("https://foo.com").build();
+//
+//        try {
+//            client.newCall(request).execute();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+//    public void onClickOkHTTPChaCha(View v) {
+//        String host = "myshadowhost.org";
+//        int port = 8989;
+//
+//        ShadowConfig sConfig = new ShadowConfig("secret","password");
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
+//
+//        Request request = new Request.Builder().url("https://foo.com").build();
+//
+//        try {
+//            client.newCall(request).execute();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void onClickChaCha(View v) {
 
