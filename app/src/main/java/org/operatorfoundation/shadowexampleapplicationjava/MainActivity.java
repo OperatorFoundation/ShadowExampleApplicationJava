@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         outcome.setText("");
         output.setText("");
 
+
         new Thread(() -> {
             try {
                 // Create the socket
