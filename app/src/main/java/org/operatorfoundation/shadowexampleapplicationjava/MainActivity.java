@@ -12,15 +12,11 @@ import org.operatorfoundation.shapeshifter.shadow.java.ShadowSocketFactory;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-
-//import okhttp3.OkHttpClient;
-//import okhttp3.Request;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         View okhttpAesButton = findViewById(R.id.okhttpAes);
         okhttpAesButton.setOnClickListener(this::onClickOkHTTPAES);
 
+        View okhttpChaChaButton = findViewById(R.id.okhttpChaCha);
+        okhttpChaChaButton.setOnClickListener(this::onClickOkHTTPChaCha);
+
     }
 
     public void onClickOkHTTPAES(View v) {
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         outcome.setText("");
         output.setText("");
-
 
         new Thread(() -> {
             // Create the socket
@@ -97,20 +95,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickOkHTTPChaCha(View v) {
-        String host = "myshadowhost.org";
-        int port = 8989;
 
-        ShadowConfig sConfig = new ShadowConfig("secret", "password");
-        OkHttpClient client = new OkHttpClient.Builder()
-                .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
+        TextView outcome = findViewById(R.id.outcome);
+        TextView output = findViewById(R.id.output);
 
-        Request request = new Request.Builder().url("https://foo.com").build();
+        outcome.setText("");
+        output.setText("");
 
-        try {
-            client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            // Create the socket
+            String host = "159.203.158.90";
+            int port = 2345;
+
+            ShadowConfig sConfig = new ShadowConfig("1234", "CHACHA20-IETF-POLY1305");
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
+
+
+            Request request = new Request.Builder().url("http://foo.com").build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                ResponseBody body = response.body();
+                runOnUiThread(() -> {
+                    try {
+                        if (body != null) {
+                            output.setText(body.string());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        output.setText(String.valueOf(e));
+                        outcome.setText(R.string.Fail);
+
+                    }
+                    if (response.code() == 200) {
+                        outcome.setText(R.string.Success);
+                    } else {
+                        outcome.setText(R.string.Fail);
+                    }
+                });
+            } catch (IOException e) {
+                runOnUiThread(() -> {
+                    e.printStackTrace();
+                    output.setText(String.valueOf(e));
+                    outcome.setText(R.string.Fail);
+                });
+            }
+
+        }).start();
     }
 
     public void onClickChaCha(View v) {
@@ -211,42 +243,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
     }
-
-//    public static class MyNetwork extends Activity {
-//        private static final String TAG = "ShadowConnect";
-//        static ShadowConfig config;
-//        static ShadowSocket socket;
-//    }
-//
-//    public void ShadowConnect(Context applicationContext) throws IOException {
-//        try {
-//
-//            ShadowConfig config = new ShadowConfig("1234", "AES-128-GCM");
-//            ShadowSocket socket = new ShadowSocket(config, "1234", 2222);
-//            //**********************Operaotor************
-//            String plaintext = "GET / HTTP/1.0\r\n\r\n";
-//            byte[] textBytes = plaintext.getBytes();
-//            try {
-//                socket.getOutputStream().write(textBytes);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                socket.getOutputStream().flush();
-//                byte[] textOutput = new byte[2];
-//                System.out.println("Output.before read" + textOutput.toString());
-//                socket.getInputStream().read(textOutput);
-//                System.out.println("Output after read" + textOutput.toString());
-//
-//                socket.close();
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 }
-
