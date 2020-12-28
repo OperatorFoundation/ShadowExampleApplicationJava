@@ -8,9 +8,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.operatorfoundation.shapeshifter.shadow.java.ShadowConfig;
 import org.operatorfoundation.shapeshifter.shadow.java.ShadowSocket;
+import org.operatorfoundation.shapeshifter.shadow.java.ShadowSocketFactory;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 //import okhttp3.OkHttpClient;
 //import okhttp3.Request;
@@ -32,41 +39,79 @@ public class MainActivity extends AppCompatActivity {
         View aesButton = findViewById(R.id.aesTest);
         aesButton.setOnClickListener(this::onClickAES);
 
+        View okhttpAesButton = findViewById(R.id.okhttpAes);
+        okhttpAesButton.setOnClickListener(this::onClickOkHTTPAES);
+
     }
 
-    //    public void onClickOkHTTPAES(View v) {
-//        String host = "myshadowhost.org";
-//        int port = 8989;
-//
-//        ShadowConfig sConfig = new ShadowConfig("secret","password");
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
-//
-//        Request request = new Request.Builder().url("https://foo.com").build();
-//
-//        try {
-//            client.newCall(request).execute();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void onClickOkHTTPAES(View v) {
 
-//    public void onClickOkHTTPChaCha(View v) {
-//        String host = "myshadowhost.org";
-//        int port = 8989;
-//
-//        ShadowConfig sConfig = new ShadowConfig("secret","password");
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
-//
-//        Request request = new Request.Builder().url("https://foo.com").build();
-//
-//        try {
-//            client.newCall(request).execute();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+        TextView outcome = findViewById(R.id.outcome);
+        TextView output = findViewById(R.id.output);
+
+        outcome.setText("");
+        output.setText("");
+
+
+        new Thread(() -> {
+            // Create the socket
+            String host = "159.203.158.90";
+            int port = 2346;
+
+            ShadowConfig sConfig = new ShadowConfig("1234", "AES-128-GCM");
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
+
+
+            Request request = new Request.Builder().url("http://foo.com").build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                ResponseBody body = response.body();
+                runOnUiThread(() -> {
+                    try {
+                        if (body != null) {
+                            output.setText(body.string());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        output.setText(String.valueOf(e));
+                        outcome.setText(R.string.Fail);
+
+                    }
+                    if (response.code() == 200) {
+                        outcome.setText(R.string.Success);
+                    } else {
+                        outcome.setText(R.string.Fail);
+                    }
+                });
+            } catch (IOException e) {
+                runOnUiThread(() -> {
+                    e.printStackTrace();
+                    output.setText(String.valueOf(e));
+                    outcome.setText(R.string.Fail);
+                });
+            }
+
+        }).start();
+    }
+
+    public void onClickOkHTTPChaCha(View v) {
+        String host = "myshadowhost.org";
+        int port = 8989;
+
+        ShadowConfig sConfig = new ShadowConfig("secret", "password");
+        OkHttpClient client = new OkHttpClient.Builder()
+                .socketFactory(new ShadowSocketFactory(sConfig, host, port)).build();
+
+        Request request = new Request.Builder().url("https://foo.com").build();
+
+        try {
+            client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void onClickChaCha(View v) {
 
@@ -104,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
                         output.setText(new String(result));
                     }
                 });
-
 
 
             } catch (IOException | NoSuchAlgorithmException e) {
@@ -155,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
                         output.setText(new String(result));
                     }
                 });
-
 
 
             } catch (IOException | NoSuchAlgorithmException e) {
